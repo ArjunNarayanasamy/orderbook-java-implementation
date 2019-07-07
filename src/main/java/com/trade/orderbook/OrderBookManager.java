@@ -46,7 +46,6 @@ public class OrderBookManager {
         if (!masterBook.containsKey(order.getInstrumentId())) {
             return "Orderbook for specified Instrument is not present.";
         } else {
-            System.out.println(order.toString());
             return masterBook.get(order.getInstrumentId()).addOrder(order);
         }
     }
@@ -55,11 +54,7 @@ public class OrderBookManager {
         if (!masterBook.containsKey(instrumentId)) {
             return null;
         } else {
-            List<Order> orders = masterBook.get(instrumentId).getOrderBook();
-            for (Order order : orders) {
-                System.out.println(">> "+order.toString());
-            }
-            return orders;
+            return masterBook.get(instrumentId).getOrderBook();
         }
     }
 
