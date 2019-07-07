@@ -20,11 +20,17 @@ public class OrderBook implements BaseOrderBook {
     }
 
     @Override
+    public boolean isOpen() {
+        return openFlag.get() ? true : false;
+    }
+
+    @Override
     public String addOrder(Order order) {
         orders.add(order);
         return "Order added successfully";
     }
 
+    @Override
     public List<Order> getOrderBook() {
         return orders;
     }

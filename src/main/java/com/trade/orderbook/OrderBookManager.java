@@ -46,7 +46,12 @@ public class OrderBookManager {
         if (!masterBook.containsKey(order.getInstrumentId())) {
             return "Orderbook for specified Instrument is not present.";
         } else {
-            return masterBook.get(order.getInstrumentId()).addOrder(order);
+            OrderBook orderBook = masterBook.get(order.getInstrumentId());
+            if (orderBook.isOpen()) {
+                return orderBook.addOrder(order);
+            } else {
+                return "The book is not in Open state.";
+            }
         }
     }
 
