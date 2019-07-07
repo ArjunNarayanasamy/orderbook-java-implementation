@@ -13,13 +13,13 @@ public final class Order {
     private final Date entryDate;
     private final String instrumentId;
     private final Double price;
-    private final boolean side;
+    private final Side side;
     private final OrderType orderType;
 
     @JsonCreator
     public Order(@JsonProperty("quantity") Double quantity, @JsonProperty("entryDate") Date entryDate,
                  @JsonProperty("instrumentId") String instrumentId,
-                 @JsonProperty("price") Double price, @JsonProperty("side") boolean side,
+                 @JsonProperty("price") Double price, @JsonProperty("side") Side side,
                  @JsonProperty("orderType") OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
@@ -35,7 +35,7 @@ public final class Order {
      * and will be looking for best available price
      */
     public Order(Double quantity, Date entryDate, String instrumentId,
-                 boolean side, OrderType orderType) {
+                 Side side, OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
         this.instrumentId = instrumentId;
@@ -60,7 +60,7 @@ public final class Order {
         return price;
     }
 
-    public boolean isSide() {
+    public Side getSide() {
         return side;
     }
 

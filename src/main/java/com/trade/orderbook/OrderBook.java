@@ -24,4 +24,8 @@ public class OrderBook implements BaseOrderBook {
         orders.add(order);
         return "Order added successfully";
     }
+
+    public List<Order> getOrderBook() {
+        return orders;
+    }
 }
