@@ -20,8 +20,8 @@ public class OrderBook implements BaseOrderBook {
     }
 
     @Override
-    public String addOrder(String instrumentId, Order order) {
+    public String addOrder(Order order) {
         orders.add(order);
-        return "Added successfully";
+        return "Order added successfully";
     }
 }

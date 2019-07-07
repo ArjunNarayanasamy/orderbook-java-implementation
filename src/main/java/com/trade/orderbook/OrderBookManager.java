@@ -41,7 +41,17 @@ public class OrderBookManager {
         }
     }
 
+    public String addOrderForInstrument(Order order) {
+        if (!masterBook.containsKey(order.getInstrumentId())) {
+            return "Orderbook for specified Instrument is not present.";
+        } else {
+            return masterBook.get(order.getInstrumentId()).addOrder(order);
+        }
+    }
+
     public Map<String, OrderBook> getAllBooks() {
         return masterBook;
     }
+
+
 }

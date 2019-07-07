@@ -1,5 +1,8 @@
 package com.trade.orderbook;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
@@ -13,8 +16,11 @@ public final class Order {
     private final boolean side;
     private final OrderType orderType;
 
-    public Order(Double quantity, Date entryDate, String instrumentId,
-                 Double price, boolean side, OrderType orderType) {
+    @JsonCreator
+    public Order(@JsonProperty("quantity") Double quantity, @JsonProperty("entryDate") Date entryDate,
+                 @JsonProperty("instrumentId") String instrumentId,
+                 @JsonProperty("price") Double price, @JsonProperty("side") boolean side,
+                 @JsonProperty("orderType") OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
         this.instrumentId = instrumentId;

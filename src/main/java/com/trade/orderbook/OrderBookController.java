@@ -28,6 +28,12 @@ public class OrderBookController {
                 RequestType.CLOSE_BOOK);
     }
 
+    @PostMapping(path = "/addOrder", consumes = "application/json", produces = "application/json")
+    public RequestStatus addOrder(@RequestBody Order order) {
+        return buildResponse(order.getInstrumentId(),
+                orderBookManager.addOrderForInstrument(order), RequestType.ADD_ORDER);
+    }
+
     @PostMapping(path = "/addBook", consumes = "application/json", produces = "application/json")
     public RequestStatus addOrderBook(@RequestBody Instrument instrument) {
         RequestStatus requestStatus = new RequestStatus();
