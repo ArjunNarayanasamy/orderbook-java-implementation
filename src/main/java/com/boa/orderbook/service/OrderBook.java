@@ -1,39 +1,15 @@
 package com.boa.orderbook.service;
 
-import com.boa.orderbook.model.Order;
+import com.boa.orderbook.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class OrderBook implements BaseOrderBook {
+public interface OrderBook {
 
-    List<Order> orders = new ArrayList<>();
-    AtomicBoolean openFlag = new AtomicBoolean(false);
-
-    @Override
-    public boolean openBook() {
-        return openFlag.compareAndSet(false, true) ? true : false;
-    }
-
-    @Override
-    public boolean closeBook() {
-        return openFlag.compareAndSet(true, false) ? true : false;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return openFlag.get() ? true : false;
-    }
-
-    @Override
-    public String addOrder(Order order) {
-        orders.add(order);
-        return "Order added successfully";
-    }
-
-    @Override
-    public List<Order> getOrderBook() {
-        return orders;
-    }
+    boolean isInstrumentExist(String instrumentId);
+    Instrument addInstrument(InstrumentRequest instrumentRequest);
+    BookStatus openInstrumentBook(String instrumentId);
+    BookStatus closeInstrumentBook(String instrumentId);
+    OrderStatus addOrderForInstrument(Order order);
+    List<Order> getOrders(String instrumentId);
 }

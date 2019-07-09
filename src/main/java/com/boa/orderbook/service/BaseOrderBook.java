@@ -1,14 +1,38 @@
 package com.boa.orderbook.service;
 
 import com.boa.orderbook.model.Order;
+import com.boa.orderbook.model.BookStatus;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface BaseOrderBook {
-    boolean openBook();
-    boolean closeBook();
-    boolean isOpen();
-    String addOrder(Order order);
-    List<Order> getOrderBook();
-    //public String addExecution()
+public class BaseOrderBook {
+
+    List<Order> orders = new ArrayList<>();
+    AtomicBoolean openFlag = new AtomicBoolean(false);
+
+
+    public BookStatus openBoook() {
+        return openFlag.compareAndSet(false, true)
+                ? BookStatus.BOOK_OPENED : BookStatus.BOOK_ALREADY_OPEN;
+    }
+
+    public BookStatus closeBook() {
+        return openFlag.compareAndSet(true, false)
+                ? BookStatus.BOOK_CLOSED : BookStatus.BOOK_ALREADY_CLOSED;
+    }
+
+    public boolean isOpen() {
+        return openFlag.get() ? true : false;
+    }
+
+    public boolean addOrder(Order order) {
+        orders.add(order);
+        return true;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

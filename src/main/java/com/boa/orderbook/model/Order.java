@@ -1,48 +1,30 @@
 package com.boa.orderbook.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.boa.orderbook.service.OrderType;
-import com.boa.orderbook.service.Side;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.Date;
 
 /**
  * Orders are immutable
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class Order {
     private final Double quantity;
     private final Date entryDate;
-    private final Instrument instrument;
+    private final InstrumentRequest instrument;
     private final Double price;
     private final Side side;
     private final OrderType orderType;
 
     @JsonCreator
     public Order(@JsonProperty("quantity") Double quantity, @JsonProperty("entryDate") Date entryDate,
-                 @JsonProperty("instrument") Instrument instrument,
+                 @JsonProperty("instrument") InstrumentRequest instrument,
                  @JsonProperty("price") Double price, @JsonProperty("side") Side side,
                  @JsonProperty("orderType") OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
         this.instrument = instrument;
         this.price = price;
-        this.side = side;
-        this.orderType = orderType;
-    }
-
-    /**
-     * Overloading constructor for Market_Order
-     * User won't specify price in case of Market_Order
-     * and will be looking for best available price
-     */
-    public Order(Double quantity, Date entryDate,
-                 Instrument instrument,
-                 Side side, OrderType orderType) {
-        this.quantity = quantity;
-        this.entryDate = entryDate;
-        this.instrument = instrument;
-        this.price = -9999999.99;
         this.side = side;
         this.orderType = orderType;
     }
@@ -55,7 +37,7 @@ public final class Order {
         return entryDate;
     }
 
-    public Instrument getInstrument() {
+    public InstrumentRequest getInstrument() {
         return instrument;
     }
 

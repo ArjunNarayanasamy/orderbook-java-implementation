@@ -1,17 +1,14 @@
 package com.boa.orderbook.controller;
 
-import com.boa.orderbook.model.Instrument;
-import com.boa.orderbook.model.Order;
-import com.boa.orderbook.service.OrderBook;
-import com.boa.orderbook.service.OrderBookManager;
-import com.boa.orderbook.service.RequestStatus;
-import com.boa.orderbook.service.RequestType;
+import com.boa.orderbook.model.*;
+import com.boa.orderbook.model.response.OrderListResponse;
+import com.boa.orderbook.service.OrderBookImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,58 +16,65 @@ import java.util.Map;
 public class OrderBookController {
 
     @Autowired
-    OrderBookManager orderBookManager;
+    OrderBookImpl orderBookImpl;
 
-    @PostMapping(path = "/openBook", consumes = "application/json", produces = "application/json")
-    public RequestStatus openOrderBook(@RequestBody Instrument instrument) {
-        return buildResponse(instrument.getInstrumentId(),
-                orderBookManager.openOrderBookForInstrument(instrument.getInstrumentId()),
-                RequestType.OPEN_BOOK);
-    }
-
-    @PostMapping(path = "/closeBook", consumes = "application/json", produces = "application/json")
-    public RequestStatus closeOrderBook(@RequestBody Instrument instrument) {
-        return buildResponse(instrument.getInstrumentId(),
-                orderBookManager.closeOrderBookForInstrument(instrument.getInstrumentId()),
-                RequestType.CLOSE_BOOK);
-    }
-
-    @PostMapping(path = "/addOrder", consumes = "application/json", produces = "application/json")
-    public RequestStatus addOrder(@RequestBody Order order) {
-        return buildResponse(order.getInstrument().getInstrumentId(),
-                orderBookManager.addOrderForInstrument(order), RequestType.ADD_ORDER);
-    }
-
-    @PostMapping(path = "/addBook", consumes = "application/json", produces = "application/json")
-    public RequestStatus addOrderBook(@RequestBody Instrument instrument) {
-        RequestStatus requestStatus = new RequestStatus();
-        requestStatus.setInstrumentId(instrument.getInstrumentId());
-        if(orderBookManager.addNewBook(instrument.getInstrumentId())) {
-            requestStatus.setStatus("Book added");
+    @GetMapping("/openBook")
+    public ResponseEntity openOrderBook(@RequestParam(required = true) String instrumentId) {
+        BookStatus bookStatus = orderBookImpl.openInstrumentBook(instrumentId);
+        ResponseEntity<BookStatus> responseEntity;
+        if(bookStatus.equals(BookStatus.BOOK_OPENED)) {
+            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.ACCEPTED);
         } else {
-            requestStatus.setStatus("Book already exists");
+            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.BAD_REQUEST);
         }
-        requestStatus.setRequestType(RequestType.ADD_BOOK);
-        return requestStatus;
+        return responseEntity;
     }
 
-    @PostMapping(path = "/getOrders", consumes = "application/json", produces = "application/json")
-    public List<Order> getOrderListForInstrument(@RequestBody Instrument instrument) {
-        return orderBookManager.getOrdersForInstrument(instrument.getInstrumentId());
+    @GetMapping("/closeBook")
+    public ResponseEntity closeOrderBook(@RequestParam(required = true) String instrumentId) {
+        BookStatus bookStatus = orderBookImpl.closeInstrumentBook(instrumentId);
+        ResponseEntity<BookStatus> responseEntity;
+        if(bookStatus.equals(BookStatus.BOOK_CLOSED)) {
+            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.ACCEPTED);
+        } else {
+            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
     }
 
-    @GetMapping(path = "/getAllBooks", produces = "application/json")
-    public Map<String, OrderBook> getAllBooks() {
-        return orderBookManager.getAllBooks();
+    @PostMapping("/addOrder")
+    public ResponseEntity addOrder(@RequestBody Order order) {
+        OrderStatus orderStatus = orderBookImpl.addOrderForInstrument(order);
+        ResponseEntity<OrderStatus> responseEntity;
+        if(orderStatus.equals(OrderStatus.ORDER_ADDED)) {
+            responseEntity = new ResponseEntity<OrderStatus>(orderStatus, HttpStatus.ACCEPTED);
+        } else {
+            responseEntity = new ResponseEntity<OrderStatus>(orderStatus, HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
     }
 
-    public RequestStatus buildResponse(String instrumentId, String status, RequestType requestType) {
-        RequestStatus requestStatus = new RequestStatus();
-        requestStatus.setInstrumentId(instrumentId);
-        requestStatus.setRequestType(requestType);
-        requestStatus.setStatus(status);
-        return requestStatus;
+    @PostMapping(path = "/addBook", consumes = "application/json")
+    public ResponseEntity addOrderBook(@RequestBody InstrumentRequest instrumentRequest) {
+        ResponseEntity<Map> responseEntity;
+        Map<String, String> response = new HashMap<>();
+        boolean isExist = orderBookImpl.isInstrumentExist(instrumentRequest.getInstrumentId());
+        if(isExist) {
+            response.put("message", "Book already exists for " + instrumentRequest.getInstrumentId());
+            responseEntity = new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } else {
+            Instrument instrument = orderBookImpl.addInstrument(instrumentRequest);
+            response.put("message", "Book Added for " + instrument.getInstrumentId());
+            responseEntity = new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
+        return responseEntity;
     }
 
+    @PostMapping("/getOrders")
+    public ResponseEntity getOrderListForInstrument(@RequestBody InstrumentRequest instrumentRequest) {
+        List<Order> orders = orderBookImpl.getOrders(instrumentRequest.getInstrumentId());
+        OrderListResponse response = new OrderListResponse(instrumentRequest.getInstrumentId(), orders);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }
