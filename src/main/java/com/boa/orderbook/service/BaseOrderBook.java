@@ -1,5 +1,6 @@
 package com.boa.orderbook.service;
 
+import com.boa.orderbook.model.ExecutionRequest;
 import com.boa.orderbook.model.Order;
 import com.boa.orderbook.model.BookStatus;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BaseOrderBook {
 
     List<Order> orders = new ArrayList<>();
+    List<ExecutionRequest> executions = new ArrayList<>();
     AtomicBoolean openFlag = new AtomicBoolean(false);
 
 
@@ -29,6 +31,11 @@ public class BaseOrderBook {
 
     public boolean addOrder(Order order) {
         orders.add(order);
+        return true;
+    }
+
+    public boolean addExecution(ExecutionRequest executionRequest) {
+        executions.add(executionRequest);
         return true;
     }
 

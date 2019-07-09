@@ -23,9 +23,9 @@ public class OrderBookController {
         BookStatus bookStatus = orderBookImpl.openInstrumentBook(instrumentId);
         ResponseEntity<BookStatus> responseEntity;
         if(bookStatus.equals(BookStatus.BOOK_OPENED)) {
-            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.ACCEPTED);
+            responseEntity = generateBookReponse(bookStatus, HttpStatus.ACCEPTED);
         } else {
-            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.BAD_REQUEST);
+            responseEntity = generateBookReponse(bookStatus, HttpStatus.BAD_REQUEST);
         }
         return responseEntity;
     }
@@ -35,9 +35,9 @@ public class OrderBookController {
         BookStatus bookStatus = orderBookImpl.closeInstrumentBook(instrumentId);
         ResponseEntity<BookStatus> responseEntity;
         if(bookStatus.equals(BookStatus.BOOK_CLOSED)) {
-            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.ACCEPTED);
+            responseEntity = generateBookReponse(bookStatus, HttpStatus.ACCEPTED);
         } else {
-            responseEntity = new ResponseEntity<>(bookStatus, HttpStatus.BAD_REQUEST);
+            responseEntity = generateBookReponse(bookStatus, HttpStatus.BAD_REQUEST);
         }
         return responseEntity;
     }
@@ -47,9 +47,9 @@ public class OrderBookController {
         OrderStatus orderStatus = orderBookImpl.addOrderForInstrument(order);
         ResponseEntity<OrderStatus> responseEntity;
         if(orderStatus.equals(OrderStatus.ORDER_ADDED)) {
-            responseEntity = new ResponseEntity<OrderStatus>(orderStatus, HttpStatus.ACCEPTED);
+            responseEntity = generateOrderResponse(orderStatus, HttpStatus.ACCEPTED);
         } else {
-            responseEntity = new ResponseEntity<OrderStatus>(orderStatus, HttpStatus.BAD_REQUEST);
+            responseEntity = generateOrderResponse(orderStatus, HttpStatus.BAD_REQUEST);
         }
         return responseEntity;
     }
@@ -75,6 +75,32 @@ public class OrderBookController {
         List<Order> orders = orderBookImpl.getOrders(instrumentRequest.getInstrumentId());
         OrderListResponse response = new OrderListResponse(instrumentRequest.getInstrumentId(), orders);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/addExecution")
+    public ResponseEntity addExecutionsForInstrument(@RequestBody ExecutionRequest executionRequest) {
+        OrderStatus orderStatus = orderBookImpl.addExecution(executionRequest);
+        ResponseEntity<OrderStatus> responseEntity;
+        if(orderStatus.equals(OrderStatus.EXECUTION_ADDED)) {
+            responseEntity = generateOrderResponse(orderStatus, HttpStatus.OK);
+        } else {
+            responseEntity = generateOrderResponse(orderStatus, HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    private ResponseEntity generateOrderResponse(OrderStatus orderStatus, HttpStatus httpStatus) {
+        Map<String, String> response = new HashMap<>();
+        response.put("code", orderStatus.code);
+        response.put("message", orderStatus.message);
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    private ResponseEntity generateBookReponse(BookStatus bookStatus, HttpStatus httpStatus) {
+        Map<String, String> response = new HashMap<>();
+        response.put("code", bookStatus.code);
+        response.put("message", bookStatus.message);
+        return new ResponseEntity<>(response, httpStatus);
     }
 
 }

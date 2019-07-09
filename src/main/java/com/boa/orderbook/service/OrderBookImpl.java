@@ -16,6 +16,10 @@ public class OrderBookImpl implements OrderBook {
     Logger logger = LoggerFactory.getLogger(OrderBookImpl.class);
     Map<String, Instrument> masterBook = new ConcurrentHashMap<>();
 
+    public void setMasterBook(Map<String, Instrument> masterBook) {
+        this.masterBook = masterBook;
+    }
+
     @Override
     public OrderStatus addOrderForInstrument(Order order) {
         String instrumentId = order.getInstrument().getInstrumentId();
@@ -85,6 +89,25 @@ public class OrderBookImpl implements OrderBook {
             bookStatus = BookStatus.BOOK_DOESNT_EXIST;
         }
         return bookStatus;
+    }
+
+    @Override
+    public OrderStatus addExecution(ExecutionRequest executionRequest) {
+        OrderStatus orderStatus;
+        BaseOrderBook baseOrderBook;
+        boolean isExist = isInstrumentExist(executionRequest.getInstrumentId());
+        if(isExist) {
+            baseOrderBook = masterBook.get(executionRequest.getInstrumentId()).getOrderBook();
+            if(!baseOrderBook.isOpen()) {
+                baseOrderBook.addExecution(executionRequest);
+                orderStatus = OrderStatus.EXECUTION_ADDED;
+            } else {
+                orderStatus = OrderStatus.BOOK_NOT_CLOSED;
+            }
+        } else {
+            orderStatus = OrderStatus.BOOK_NOT_EXISTS;
+        }
+        return orderStatus;
     }
 
 }

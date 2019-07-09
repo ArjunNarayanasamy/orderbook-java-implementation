@@ -6,6 +6,16 @@ public class InstrumentRequest {
      private Region region;
      private String sourceSystem;
 
+     public InstrumentRequest() {
+     }
+
+     public InstrumentRequest(String instrumentId, InstrumentType instrumentType, Region region, String sourceSystem) {
+          this.instrumentId = instrumentId;
+          this.instrumentType = instrumentType;
+          this.region = region;
+          this.sourceSystem = sourceSystem;
+     }
+
      public String getInstrumentId() {
           return instrumentId;
      }

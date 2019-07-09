@@ -1,4 +1,4 @@
-package com.trade.orderbook;
+package com.boa.orderbook;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

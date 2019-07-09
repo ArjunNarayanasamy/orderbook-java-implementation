@@ -12,4 +12,5 @@ public interface OrderBook {
     BookStatus closeInstrumentBook(String instrumentId);
     OrderStatus addOrderForInstrument(Order order);
     List<Order> getOrders(String instrumentId);
+    OrderStatus addExecution(ExecutionRequest executionRequest);
 }
