@@ -1,4 +1,6 @@
-package com.trade.orderbook;
+package com.boa.orderbook.service;
+
+import com.boa.orderbook.model.Order;
 
 import java.util.List;
 

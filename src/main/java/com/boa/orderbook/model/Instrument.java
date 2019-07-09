@@ -1,4 +1,4 @@
-package com.trade.orderbook;
+package com.boa.orderbook.model;
 
 public class Instrument {
     private String instrumentId;

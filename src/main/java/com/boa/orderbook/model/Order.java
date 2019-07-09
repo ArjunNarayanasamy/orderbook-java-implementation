@@ -1,7 +1,9 @@
-package com.trade.orderbook;
+package com.boa.orderbook.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.boa.orderbook.service.OrderType;
+import com.boa.orderbook.service.Side;
 
 import java.util.Date;
 
@@ -11,19 +13,19 @@ import java.util.Date;
 public final class Order {
     private final Double quantity;
     private final Date entryDate;
-    private final String instrumentId;
+    private final Instrument instrument;
     private final Double price;
     private final Side side;
     private final OrderType orderType;
 
     @JsonCreator
     public Order(@JsonProperty("quantity") Double quantity, @JsonProperty("entryDate") Date entryDate,
-                 @JsonProperty("instrumentId") String instrumentId,
+                 @JsonProperty("instrument") Instrument instrument,
                  @JsonProperty("price") Double price, @JsonProperty("side") Side side,
                  @JsonProperty("orderType") OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
-        this.instrumentId = instrumentId;
+        this.instrument = instrument;
         this.price = price;
         this.side = side;
         this.orderType = orderType;
@@ -34,11 +36,12 @@ public final class Order {
      * User won't specify price in case of Market_Order
      * and will be looking for best available price
      */
-    public Order(Double quantity, Date entryDate, String instrumentId,
+    public Order(Double quantity, Date entryDate,
+                 Instrument instrument,
                  Side side, OrderType orderType) {
         this.quantity = quantity;
         this.entryDate = entryDate;
-        this.instrumentId = instrumentId;
+        this.instrument = instrument;
         this.price = -9999999.99;
         this.side = side;
         this.orderType = orderType;
@@ -52,8 +55,8 @@ public final class Order {
         return entryDate;
     }
 
-    public String getInstrumentId() {
-        return instrumentId;
+    public Instrument getInstrument() {
+        return instrument;
     }
 
     public Double getPrice() {
@@ -73,7 +76,7 @@ public final class Order {
         return "Order{" +
                 "quantity=" + quantity +
                 ", entryDate=" + entryDate +
-                ", instrumentId='" + instrumentId + '\'' +
+                ", instrument=" + instrument +
                 ", price=" + price +
                 ", side=" + side +
                 ", orderType=" + orderType +

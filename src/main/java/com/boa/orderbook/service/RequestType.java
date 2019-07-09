@@ -1,4 +1,4 @@
-package com.trade.orderbook;
+package com.boa.orderbook.service;
 
 public enum RequestType {
     ADD_BOOK,

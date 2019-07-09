@@ -1,4 +1,4 @@
-package com.trade.orderbook;
+package com.boa.orderbook.service;
 
 public class RequestStatus {
     private String instrumentId;

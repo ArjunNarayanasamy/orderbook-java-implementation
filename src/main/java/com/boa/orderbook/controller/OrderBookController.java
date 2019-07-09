@@ -1,5 +1,11 @@
-package com.trade.orderbook;
+package com.boa.orderbook.controller;
 
+import com.boa.orderbook.model.Instrument;
+import com.boa.orderbook.model.Order;
+import com.boa.orderbook.service.OrderBook;
+import com.boa.orderbook.service.OrderBookManager;
+import com.boa.orderbook.service.RequestStatus;
+import com.boa.orderbook.service.RequestType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +37,7 @@ public class OrderBookController {
 
     @PostMapping(path = "/addOrder", consumes = "application/json", produces = "application/json")
     public RequestStatus addOrder(@RequestBody Order order) {
-        return buildResponse(order.getInstrumentId(),
+        return buildResponse(order.getInstrument().getInstrumentId(),
                 orderBookManager.addOrderForInstrument(order), RequestType.ADD_ORDER);
     }
 
