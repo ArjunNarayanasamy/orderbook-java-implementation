@@ -1,6 +1,6 @@
-package com.boa.orderbook.model.response;
+package com.arjun.orderbook.model.response;
 
-import com.boa.orderbook.model.Order;
+import com.arjun.orderbook.model.Order;
 
 import java.util.ArrayList;
 import java.util.List;

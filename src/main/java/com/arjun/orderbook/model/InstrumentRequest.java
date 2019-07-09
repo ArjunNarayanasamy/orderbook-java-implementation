@@ -1,4 +1,4 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
 public class InstrumentRequest {
      private String instrumentId;

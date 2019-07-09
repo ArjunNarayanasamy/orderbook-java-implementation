@@ -1,4 +1,4 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
 public enum BookStatus {
     BOOK_ALREADY_OPEN("BOOK_ALREADY_OPEN", "Book already in open status"),

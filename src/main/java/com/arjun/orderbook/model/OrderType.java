@@ -1,4 +1,4 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
 public enum OrderType {
     MARKET_ORDER,

@@ -1,8 +1,6 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
-import com.boa.orderbook.model.InstrumentType;
-import com.boa.orderbook.model.Region;
-import com.boa.orderbook.service.BaseOrderBook;
+import com.arjun.orderbook.service.BaseOrderBook;
 
 public class Instrument {
 

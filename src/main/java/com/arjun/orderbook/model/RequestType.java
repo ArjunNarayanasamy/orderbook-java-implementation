@@ -1,4 +1,4 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
 public enum RequestType {
     ADD_BOOK,

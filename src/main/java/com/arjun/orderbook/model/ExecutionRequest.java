@@ -1,9 +1,18 @@
-package com.boa.orderbook.model;
+package com.arjun.orderbook.model;
 
 public class ExecutionRequest {
     private String instrumentId;
     private Integer quantity;
     private Double price;
+
+    public ExecutionRequest() {
+    }
+
+    public ExecutionRequest(String instrumentId, Integer quantity, Double price) {
+        this.instrumentId = instrumentId;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public String getInstrumentId() {
         return instrumentId;
